@@ -1,0 +1,58 @@
+baseURL = "https://pugsandinfosec.com"
+# [en, zh-cn, fr, ...] determines default content language
+defaultContentLanguage = "en"
+# language code
+languageCode = "en"
+title = "Pugs & Infosec"
+paginate = 5 
+
+# Change the default theme to be use when building the site with Hugo
+theme = "uBlogger"
+
+[params]
+  # uBlogger theme version
+  version = "1.3.X"
+
+[menu]
+  [[menu.main]]
+    identifier = "posts"
+    # you can add extra information before the name (HTML format is supported), such as icons
+    pre = ""
+    # you can add extra information after the name (HTML format is supported), such as icons
+    post = ""
+    name = "Posts"
+    url = "/posts/"
+    # title will be shown when you hover on this menu link
+    title = "Blog posts"
+    weight = 1
+  [[menu.main]]
+    identifier = "about"
+    pre = ""
+    post = ""
+    name = "About Me"
+    url = "/about/"
+    title = "This page is about me"
+    weight = 2
+  [[menu.main]]
+    identifier = "tags"
+    pre = ""
+    post = ""
+    name = "Tags"
+    url = "/tags/"
+    title = "Topics & Tags"
+    weight = 3
+  [[menu.main]]
+    identifier = "categories"
+    pre = ""
+    post = ""
+    name = "Categories"
+    url = "/categories/"
+    title = "Site categories content"
+    weight = 4
+
+# Markup related configuration in Hugo
+[markup]
+  # Syntax Highlighting (https://gohugo.io/content-management/syntax-highlighting)
+  [markup.highlight]
+    # false is a necessary configuration
+    noClasses = false
