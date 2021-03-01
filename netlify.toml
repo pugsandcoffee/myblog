@@ -4,7 +4,7 @@ command = "hugo --gc --minify"
 
 [build.environment]
 HUGO_VERSION = "0.78.2"
-HUGO_THEME = "ublogger"
+HUGO_THEME = "uBlogger"
 HUGO_BASEURL = "https://pugsandinfosec.com"
 HUGO_ENV = "production"
 HUGO_ENABLEGITINFO = "true"
