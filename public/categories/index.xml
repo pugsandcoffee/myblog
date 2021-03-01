@@ -1,0 +1,21 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>Categories - Category - Pugs &amp; Infosec</title>
+        <link>https://pugsandinfosec.com/categories/</link>
+        <description>Categories - Category - Pugs &amp; Infosec</description>
+        <generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Mon, 01 Mar 2021 21:57:40 &#43;0800</lastBuildDate><atom:link href="https://pugsandinfosec.com/categories/" rel="self" type="application/rss+xml" /><item>
+    <title>Pug</title>
+    <link>https://pugsandinfosec.com/categories/pug/</link>
+    <pubDate>Mon, 01 Mar 2021 21:57:40 &#43;0800</pubDate>
+    <author>Author</author>
+    <guid>https://pugsandinfosec.com/categories/pug/</guid>
+    <description><![CDATA[]]></description>
+</item><item>
+    <title>Markdown</title>
+    <link>https://pugsandinfosec.com/categories/markdown/</link>
+    <pubDate>Sun, 01 Dec 2019 21:57:40 &#43;0800</pubDate>
+    <author>Author</author>
+    <guid>https://pugsandinfosec.com/categories/markdown/</guid>
+    <description><![CDATA[]]></description>
+</item></channel>
+</rss>

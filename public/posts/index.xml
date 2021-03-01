@@ -1,0 +1,16 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>All Basic Markdown Syntax - Pugs &amp; Infosec</title>
+        <link>https://pugsandinfosec.com/posts/</link>
+        <description>All Basic Markdown Syntax | Pugs &amp; Infosec</description>
+        <generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Sun, 01 Dec 2019 21:57:40 &#43;0800</lastBuildDate><atom:link href="https://pugsandinfosec.com/posts/" rel="self" type="application/rss+xml" /><item>
+    <title>My Favorite Doggo</title>
+    <link>https://pugsandinfosec.com/posts/my-first-post/first_post/</link>
+    <pubDate>Mon, 01 Mar 2021 21:57:40 &#43;0800</pubDate>
+    <author>Author</author>
+    <guid>https://pugsandinfosec.com/posts/my-first-post/first_post/</guid>
+    <description><![CDATA[<div class="featured-image">
+                <img src="/pug.jpg" referrerpolicy="no-referrer">
+            </div>Welcome to my personal blog where I write about my journey into the realm of cybersecurity, ethical hacking and my pug.]]></description>
+</item></channel>
+</rss>

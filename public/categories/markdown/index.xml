@@ -1,0 +1,14 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>Markdown - Category - Pugs &amp; Infosec</title>
+        <link>https://pugsandinfosec.com/categories/markdown/</link>
+        <description>Markdown - Category - Pugs &amp; Infosec</description>
+        <generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Sun, 01 Dec 2019 21:57:40 &#43;0800</lastBuildDate><atom:link href="https://pugsandinfosec.com/categories/markdown/" rel="self" type="application/rss+xml" /><item>
+    <title>Basic Markdown Syntax</title>
+    <link>https://pugsandinfosec.com/posts/</link>
+    <pubDate>Sun, 01 Dec 2019 21:57:40 &#43;0800</pubDate>
+    <author>Author</author>
+    <guid>https://pugsandinfosec.com/posts/</guid>
+    <description><![CDATA[This article shows the basic Markdown syntax and format.]]></description>
+</item></channel>
+</rss>
