@@ -16,6 +16,8 @@ lightgallery: false
 summary: Joining this room on the TryHackMe platform, it tells us that this box is apparently a webserver that hosts a vulnerable website which lets you convert image file formats.
 ---
 
+{{< figure src="magician/banner.jpg" title="This magical website lets you convert image file formats" >}}
+
 ### Summary
 
 1. Recon with nmap & Enumerate the services. FTP on port 21, HTTP-Proxy on port 8080 and HTTP on port 8081.
