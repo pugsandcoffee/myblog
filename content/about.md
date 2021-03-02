@@ -9,4 +9,7 @@ math:
   enable: true
 ---
 
-### Hello
+### Hello, my name is Daniel
+
+![pug](C:\Users\Daniel\OneDrive\Documents\GitHub\myblog\static\pug.jpg)
+
