@@ -11,15 +11,9 @@ math:
 
 ### I'm Daniel, a Cybersecurity Engineer.
 
-I enjoy all things related to IT, security and networking.
+### I enjoy all things related to IT, security and networking.
 
-Have a look at some of my 
+### Have a look at some of my projects or CTF writeups.
 
-[projects]: /categories/projects	"My projects"
-
- or 
-
-[writeups]: /categories/writeups	"CTF writeups"
-
-![pug](C:\Users\Daniel\OneDrive\Documents\GitHub\myblog\static\pug.jpg)
+![pug](desksetup.jpg)
 
