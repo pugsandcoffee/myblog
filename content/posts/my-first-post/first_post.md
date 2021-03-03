@@ -6,7 +6,7 @@ lastmod: 2021-03-02T16:45:40+08:00
 description: "This post is a short introduction"
 
 title: My Favorite Doggo
-featuredImage: pug.jpg
+featuredImage: Lotta1.jpg
 hiddenfeaturedImage: true
 
 tags: ["Pug", "Blog"]
@@ -19,7 +19,7 @@ summary: Welcome to my personal blog where I write about my journey into the rea
 
 
 
-# {{< figure src="/pug.jpg" title="Lotta the Pug" >}}
+# {{< figure src="/Lotta1.jpg" title="Lotta the Pug" >}}
 
 ## Hello world!
 Welcome to my personal blog where I write about my journey into the realm of cybersecurity, ethical hacking and my pug.
