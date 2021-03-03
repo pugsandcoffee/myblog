@@ -26,7 +26,7 @@ Welcome to my personal blog where I write about my journey into the realm of cyb
 
 This is my first blog and website _ever_. A nice guy named **BHE** from the discord community **#NorSEC** advised me to create my own blog for content creation and sharing. I was also inspired to learn more about shortcodes when my colleague Nelson showed me some notes he had organized in markdown. 
 
-I decided to go with a combination of the static site builder Hugo, GitHub, and Netlify. Mostly because I can use markdown to construct the content of my posts and pages but also because of the ease with a serverless app. This also forces me to learn something new, which I enjoy alot.
+I decided to go with a combination of the static site builder **Hugo, GitHub, and Netlify**. Mostly because I can use markdown to construct the content of my posts and pages but also because of the ease with a serverless app. This also forces me to learn something new, which I enjoy alot.
 
 So far, so good:
 
