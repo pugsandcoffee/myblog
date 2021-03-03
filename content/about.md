@@ -12,8 +12,7 @@ math:
   enable: true
 ---
 
-
-![desktop](/desksetup.jpg "My home desk setup")
+![desktop](/desk.gif "My home desk setup")
 
 ## I'm Daniel, a Cybersecurity Engineer. 
 ##### I enjoy all things related to IT, security and networking.
