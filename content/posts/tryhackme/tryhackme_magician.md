@@ -2,7 +2,7 @@
 weight: 3
 title: "My First CTF writeup"
 date: 2021-03-03T21:57:40+08:00
-lastmod: 2021-03-03T16:45:40+08:00
+lastmod: 2021-03-04T16:45:40+08:00
 description: "This is my first TryHackMe writeup"
 
 title: My first CTF writeup
@@ -13,10 +13,10 @@ tags: ["TryHackMe", "CTF"]
 categories: ["Writeups"]
 
 lightgallery: false
-summary: Joining this room on the TryHackMe platform, it tells us that this box is apparently a webserver that hosts a vulnerable website which lets you convert image file formats.
+summary: TryHackMe's CTF __"Magician"__. Joining this room on the TryHackMe platform, it tells us that this box is apparently a webserver that hosts a vulnerable website which lets you convert image file formats.
 ---
 
-{{< figure src="magician/banner.jpg" title="This magical website lets you convert image file formats" >}}
+# {{< figure src="/magician/banner.jpg" title="This magical website lets you convert image file formats" >}}
 
 ### Summary
 

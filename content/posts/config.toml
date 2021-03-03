@@ -1,0 +1,3 @@
+[permalinks]
+
+  posts = "/:year/:month/:title/"

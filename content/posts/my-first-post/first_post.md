@@ -9,7 +9,7 @@ title: My Favorite Doggo
 featuredImage: pug.jpg
 hiddenfeaturedImage: true
 
-tags: ["Pug", "HTML"]
+tags: ["Pug", "Blog"]
 categories: ["Pug"]
 
 lightgallery: false

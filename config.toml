@@ -13,6 +13,10 @@ theme = "uBlogger"
   # uBlogger theme version
   version = "1.3.X"
 
+[permalinks]
+
+  posts = "/:year/:month/:title/"
+
 [menu]
   [[menu.main]]
     identifier = "posts"
@@ -56,3 +60,4 @@ theme = "uBlogger"
   [markup.highlight]
     # false is a necessary configuration
     noClasses = false
+
