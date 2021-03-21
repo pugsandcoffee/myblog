@@ -105,9 +105,10 @@ We could try a simple php script that works with native PHP:
 {{< figure src="/blueprint/php_passthru.jpg" title="" >}}
 
 Explanation from PHP.net:
-   •  exec() is for calling a system command, and perhaps dealing with the output yourself.
-   •  system() is for executing a system command and immediately displaying the output - presumably text.
-   •  passthru() is for executing a system command which you wish the raw return from - presumably something binary.
+
+>    exec() is for calling a system command, and perhaps dealing with the output yourself.
+>    system() is for executing a system command and immediately displaying the output - presumably text.
+>    passthru() is for executing a system command which you wish the raw return from - presumably something binary.
 
 So basically this will let us do RCE through our browser adress bar. Pretty cool!
 
@@ -134,13 +135,13 @@ This immediately gives me an idea; Lets create an msfvenom payload for Windows w
 So you can see here that all it took was 2 simple commands with the right parameters.
 All we need to do next is to catch the reverse shell connection with a netcat listener.
 
-We start our listener and then browse to our newly uploaded shell:
+We start our listener to prepare for our newly uploaded shell:
 
 ```bash
 nc -lvnp 9999
 ```
 
-And browse to http://10.10.248.2:8080/oscommerce-2.3.4/catalog/admin/shell.php?cmd=shell
+And then browse to http://10.10.248.2:8080/oscommerce-2.3.4/catalog/admin/shell.php?cmd=shell
 
 {{< figure src="/blueprint/netcat.jpg" title="" >}}
 
