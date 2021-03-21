@@ -13,7 +13,7 @@ tags: ["TryHackMe", "CTF"]
 categories: ["Writeups"]
 
 lightgallery: false
-summary: Joining this room on the TryHackMe platform, it tells us that this box is apparently a windows machine that hosts a vulnerable website. We will hack into this Windows machine and escalate our privileges to Administrator by NOT using Metasploit.
+summary: Joining the __"Blueprint"__ room on the TryHackMe platform, it tells us that this box is apparently a windows machine that hosts a vulnerable website. We will hack into this Windows machine and escalate our privileges to Administrator by NOT using Metasploit.
 ---
 
 # {{< figure src="/blueprint/banner.jpg" title="Hack into this Windows machine and escalate your privileges to Administrator." >}}
