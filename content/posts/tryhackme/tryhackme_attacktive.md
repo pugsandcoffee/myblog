@@ -1,11 +1,11 @@
 ---
 weight: 3
-title: "CTF writeup - Blueprint"
+title: "CTF writeup - Attacktive Directory"
 date: 2021-03-22T15:57:40+08:00
 lastmod: 2021-03-22T16:45:40+08:00
 description: "This is my third TryHackMe writeup"
 
-title: CTF writeup - Blueprint
+title: CTF writeup - Attacktive Directory
 featuredImage: tryhackmebanner.jpg
 hiddenfeaturedImage: true
 
