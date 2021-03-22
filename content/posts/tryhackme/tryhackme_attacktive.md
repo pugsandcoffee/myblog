@@ -44,7 +44,6 @@ nmap -Pn -A -T4 -sV -sC -p- 10.10.222.250
 
 We immidietaly discover some ports that quickly tells us this is a Windows machine with some services worth investigating.
 
-1. Port 88 - Reveals that Kerberos is running
 2. Port 445 - Which is SMB running on top of TCP
 3. Port 139 - Which is the old SMB that runs on top of NetBIOS.
 
@@ -78,9 +77,10 @@ It is NOT recommended to brute force credentials due to account lockout policies
 __Why Kerbrute you ask?__
 
 It's a tool to quickly bruteforce and enumerate valid Active Directory accounts through Kerberos Pre-Authentication.
-• Faster than any other approach
-• Potentially stealthier since pre-auth failure does not trigger “traditional” Account failed logon even 4625.
-• Can validate usernames or test a login by ONLY sending ONE UDP frame to the KDC (Domain Controller)
+
+- Faster than any other approach
+  Potentially stealthier since pre-auth failure does not trigger “traditional” Account failed logon even 4625.
+  Can validate usernames or test a login by ONLY sending ONE UDP frame to the KDC (Domain Controller)
 
 We Download the attached userlist and passwordlist. Once we have done that, we can use our Kerbrute attack against the domain by enumerating users.  
 We could additionally attempt password spraying attempts or brute force usernames and passwords.
@@ -88,7 +88,7 @@ We could additionally attempt password spraying attempts or brute force username
 {{< figure src="/attacktive/kerbrute.jpg" title="" >}}
 
 ```bash
-.**/**kerbrute userenum --dc spookysec.local -d spookysec.local '/home/kali/wordlists/userlistwindows.txt' -t 100
+./kerbrute userenum --dc spookysec.local -d spookysec.local '/home/kali/wordlists/userlistwindows.txt' -t 100
 ```
 
 We can see here that we have pulled several usernames, including some that stand out; __svc-admin__ and __backup__ . They might prove useful...
@@ -154,7 +154,7 @@ Great! We got the Administrator hash.
 This opens up a couple of different paths for us.
 
 1. Passing the hash with PSEXEC
-   2. Evil-WINRM - which gives us a shell administrator privileges in this case
+2. Evil-WINRM - which gives us a shell administrator privileges in this case
 
 ### Gaining a shell
 
@@ -182,11 +182,5 @@ With this shell we can retrieve all the information we want to complete the room
 
 ## Final thoughts
 
-Attacktive Directory was an interesting room. I have never used Evil-WinRM before go gain a shell. Its always nice to learn something new.
-
-
-
-
-
-##  
+Attacktive Directory was an interesting room. I have never used Evil-WinRM before to gain a shell. Its always nice to learn something new.
 
