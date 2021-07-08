@@ -38,8 +38,7 @@ summary: Sopra Steria's very own TryHackMe CTF __"2Sapp"__. Joining this room on
 
 ### NMAP
 
-~~~bash
-```
+```bash
 nmap -sV -sC -T5 -A -p- http://2sapp.thm
  21/tcp  open   ftp     vsftpd 2.0.8 or later
 | ftp-anon: Anonymous FTP login allowed (FTP code 230)
@@ -68,9 +67,7 @@ nmap -sV -sC -T5 -A -p- http://2sapp.thm
 |_http-title: CODIAD
 443/tcp closed https
 Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
-
 ```
-~~~
 
 
 
