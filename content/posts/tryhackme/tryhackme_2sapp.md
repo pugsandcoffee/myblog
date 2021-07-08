@@ -104,13 +104,17 @@ Start our netcat listener and we get a session as the user “www-data”.
 Our reverse netcat session is successful!
 At this stage, I usually upgrade the shell to an interactive one.
 
-1. The first thing to do is use python3 -c 'import pty;pty.spawn("/bin/bash")' ', which uses Python to spawn a better-featured bash shell. At this point, our shell will look a bit prettier, but we still won’t be able to use tab autocomplete or the arrow keys, and Ctrl + C will still kill the shell.
+1. The first thing to do is use 
+
+    `python3 -c 'import pty;pty.spawn("/bin/bash")' '`
+
+    , which uses Python to spawn a better-featured bash shell. At this point, our shell will look a bit prettier, but we still won’t be able to use tab autocomplete or the arrow keys, and `Ctrl + C` will still kill the shell.
 
 2. Step two is:
- export TERM=xterm – this will give us access to term commands such as clear.
+ `export TERM=xterm` – this will give us access to term commands such as clear.
 
 
-3. Finally (and most importantly) we will background the shell using Ctrl + Z. Back in our own terminal we use stty raw -echo; fg.This does two things: first, it turns off our own terminal echo (which gives us access to tab autocompletes, the arrow keys, and Ctrl + C to kill processes). It then foregrounds the shell, thus completing the process.
+3. Finally (and most importantly) we will background the shell using `Ctrl + Z.` Back in our own terminal we use `stty raw -echo; fg`.This does two things: first, it turns off our own terminal echo (which gives us access to tab autocompletes, the arrow keys, and Ctrl + C to kill processes). It then foregrounds the shell, thus completing the process.
 ```bash
 python3 -c 'import pty;pty.spawn("/bin/bash")'
 export TERM=xterm
