@@ -49,24 +49,18 @@ nmap -sV -sC -T5 -A -p- http://2sapp.thm
 |      Connected to ::ffff:10.11.17.119
 |      Logged in as ftp
 |      TYPE: ASCII
-|      No session bandwidth limit
-|      Session timeout in seconds is 7
-|      Control connection is plain text
-|      Data connections will be plain text
-|      At session startup, client count was 4
 |      vsFTPd 3.0.3 - secure, fast, stable
 |_End of status
 22/tcp  open   ssh     OpenSSH 7.6p1 Ubuntu 4ubuntu0.3 (Ubuntu Linux; protocol 2.0)
 | ssh-hostkey: 
 |   2048 16:ca:64:ac:b2:35:53:62:ca:2e:20:09:90:16:5f:b7 (RSA)
 |   256 8f:75:3c:e6:18:71:75:d7:63:7b:5b:2e:62:70:8d:7b (ECDSA)
-|_  256 bb:d6:7a:8b:76:ed:69:a6:96:24:8b:83:e5:6d:94:dc (ED25519)
 23/tcp  open   telnet  Linux telnetd
 80/tcp  open   http    Apache httpd 2.4.29 ((Ubuntu))
 |_http-server-header: Apache/2.4.29 (Ubuntu)
 |_http-title: CODIAD
 443/tcp closed https
-Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+
 ```
 
 
