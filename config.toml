@@ -12,6 +12,15 @@ theme = "Cupper"
 [params]
   # uBlogger theme version
   version = "1.3.X"
+  # site default theme ("light", "dark", "auto")
+  defaultTheme = "dark"
+  
+  # Social share links in post page
+    [params.page.share]
+      enable = true
+      Twitter = true
+      Facebook = true
+      Linkedin = false
 
 [permalinks]
 
