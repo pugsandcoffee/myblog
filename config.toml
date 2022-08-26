@@ -4,7 +4,8 @@ defaultContentLanguage = "en"
 # language code
 languageCode = "en"
 title = "Pugs & Infosec"
-paginate = 5 
+paginate = 5
+themesDir = "/themes"
 
 # Change the default theme to be use when building the site with Hugo
 theme = "Cupper"
@@ -16,7 +17,7 @@ theme = "Cupper"
   defaultTheme = "dark"
   
   # Social share links in post page
-    [params.page.share]
+[params.page.share]
       enable = true
       Twitter = true
       Facebook = true
@@ -66,7 +67,21 @@ theme = "Cupper"
 # Markup related configuration in Hugo
 [markup]
   # Syntax Highlighting (https://gohugo.io/content-management/syntax-highlighting)
+  # 语法高亮设置 (https://gohugo.io/content-management/syntax-highlighting)
   [markup.highlight]
-    # false is a necessary configuration
+    codeFences = true
+    guessSyntax = true
+    lineNos = true
+    lineNumbersInTable = true
     noClasses = false
-
+  # Goldmark is from Hugo 0.60 the default library used for Markdown
+  # Goldmark 是 Hugo 0.60 以来的默认 Markdown 解析库
+  [markup.goldmark]
+    [markup.goldmark.extensions]
+      definitionList = true
+      footnote = true
+      linkify = true
+      strikethrough = true
+      table = true
+      taskList = true
+      typographer = true
