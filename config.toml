@@ -7,7 +7,7 @@ title = "Pugs & Infosec"
 paginate = 5 
 
 # Change the default theme to be use when building the site with Hugo
-theme = "uBlogger"
+theme = "Cupper"
 
 [params]
   # uBlogger theme version
