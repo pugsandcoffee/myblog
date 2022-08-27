@@ -7,7 +7,7 @@ description: "This post is a short introduction"
 
 title: My Favorite Doggo
 featuredImage: Lotta1.jpg
-hiddenfeaturedImage: true
+hiddenfeaturedImage: false
 
 tags: ["Pug", "Blog"]
 categories: ["Pug"]
