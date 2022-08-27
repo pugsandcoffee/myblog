@@ -6,7 +6,7 @@ lastmod: 2021-03-02T16:45:40+08:00
 description: "This post is a short introduction"
 
 title: My Favorite Doggo
-featuredImage: Lotta1.jpg
+featuredImage: /Lotta1.jpg
 hiddenfeaturedImage: false
 
 tags: ["Pug", "Blog"]
