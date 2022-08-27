@@ -25,7 +25,7 @@ theme = "Cupper"
     # Header title config
     [params.header.title]
       # URL of the LOGO
-      logo = "https://homenetworkguy.com/images/logo-footer_hucc142ea9f1fdd8cddb9b3b4ce66a57d5_7452_b1b9aaf3276dfc8c72399c1e95bd6f57.webp?ezimgfmt=rs:247x50/rscb4/ngcb4/notWebP"
+      logo = ""
       # title name
       name = "Pugs & Infosec"
       # you can add extra information before the name (HTML format is supported), such as icons
