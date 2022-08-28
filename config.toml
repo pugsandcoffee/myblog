@@ -8,7 +8,7 @@ paginate = 5
 themesDir = "/themes"
 
 # Change the default theme to be use when building the site with Hugo
-theme = "Cupper"
+theme = "uBlogger"
 
 [params]
   # uBlogger theme version
